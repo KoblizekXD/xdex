@@ -6,7 +6,6 @@ import java.io.DataOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.zip.Adler32;
 
 public class DexOutputStream extends DataOutputStream {
     /**
@@ -46,9 +45,4 @@ public class DexOutputStream extends DataOutputStream {
         }
     }
 
-    public static int adler32(byte[] data) {
-        Adler32 adler32 = new Adler32();
-        adler32.update(data);
-        return (int) adler32.getValue();
-    }
 }

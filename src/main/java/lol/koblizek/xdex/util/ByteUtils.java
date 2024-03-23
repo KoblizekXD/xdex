@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
+import java.util.zip.Adler32;
 
 public class ByteUtils {
     public static byte[] remove(byte[] array, int ...indexes) {
@@ -73,5 +74,11 @@ public class ByteUtils {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static int adler32(byte[] data) {
+        Adler32 adler32 = new Adler32();
+        adler32.update(data);
+        return (int) adler32.getValue();
     }
 }

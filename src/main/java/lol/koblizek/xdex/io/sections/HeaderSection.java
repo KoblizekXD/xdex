@@ -1,6 +1,5 @@
 package lol.koblizek.xdex.io.sections;
 
-import lol.koblizek.xdex.io.DexOutputStream;
 import lol.koblizek.xdex.util.ByteUtils;
 import lol.koblizek.xdex.util.Constants;
 
@@ -61,7 +60,7 @@ public record HeaderSection(int fileSize, int linkSize, int linkOff, int mapOff,
     // This better be working...
     public byte[] getBytes(Section... sections) {
         byte[] hashed = ByteUtils.hashBytes(ByteUtils.concat(getBytes(), Arrays.stream(sections).map(Section::getBytes).toArray(byte[][]::new)));
-        int checksum = DexOutputStream.adler32(ByteUtils.concat(ByteUtils.concat(ByteUtils.concat(hashed, getBytes())), ByteUtils.concat(Arrays.stream(sections).map(Section::getBytes))));
+        int checksum = ByteUtils.adler32(ByteUtils.concat(ByteUtils.concat(ByteUtils.concat(hashed, getBytes())), ByteUtils.concat(Arrays.stream(sections).map(Section::getBytes))));
         return ByteBuffer.allocate(0x70)
                 .putInt(checksum)
                 .put(hashed)

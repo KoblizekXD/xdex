@@ -1,8 +1,6 @@
 package lol.koblizek.xdex.io.sections;
 
-import lol.koblizek.xdex.io.DexOutputStream;
-
-import java.nio.ByteBuffer;
+import lol.koblizek.xdex.util.ByteUtils;
 
 public interface Section {
     /**
@@ -12,6 +10,6 @@ public interface Section {
     byte[] getBytes();
 
     default int getAdler32Checksum() {
-        return DexOutputStream.adler32(getBytes());
+        return ByteUtils.adler32(getBytes());
     }
 }
