@@ -8,8 +8,4 @@ public interface Section {
      */
     int getSize();
     byte[] getBytes();
-
-    default int getAdler32Checksum() {
-        return ByteUtils.adler32(getBytes());
-    }
 }

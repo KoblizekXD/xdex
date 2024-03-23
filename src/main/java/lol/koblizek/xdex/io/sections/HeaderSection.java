@@ -62,6 +62,7 @@ public record HeaderSection(int fileSize, int linkSize, int linkOff, int mapOff,
         byte[] hashed = ByteUtils.hashBytes(ByteUtils.concat(getBytes(), Arrays.stream(sections).map(Section::getBytes).toArray(byte[][]::new)));
         int checksum = ByteUtils.adler32(ByteUtils.concat(ByteUtils.concat(ByteUtils.concat(hashed, getBytes())), ByteUtils.concat(Arrays.stream(sections).map(Section::getBytes))));
         return ByteBuffer.allocate(0x70)
+                .put(Constants.DEX_FILE_MAGIC)
                 .putInt(checksum)
                 .put(hashed)
                 .put(getBytes())
