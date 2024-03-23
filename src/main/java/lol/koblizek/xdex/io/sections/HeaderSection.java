@@ -2,6 +2,7 @@ package lol.koblizek.xdex.io.sections;
 
 import lol.koblizek.xdex.io.DexOutputStream;
 import lol.koblizek.xdex.util.ByteUtils;
+import lol.koblizek.xdex.util.Constants;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -11,6 +12,7 @@ public record HeaderSection(int fileSize, int linkSize, int linkOff, int mapOff,
                             int typeIdsSize, int typeIdsOff, int protoIdsSize, int protoIdsOff, int fieldIdsSize,
                             int fieldIdsOff, int methodIdsSize, int methodIdsOff, int classDefsSize, int classDefsOff,
                             int dataSize, int dataOff) implements Section {
+
     /**
      * Returns the size of the section in bytes
      * according to <a href="https://source.android.com/docs/core/runtime/dex-format#header-item">Header format</a>
@@ -30,8 +32,11 @@ public record HeaderSection(int fileSize, int linkSize, int linkOff, int mapOff,
      */
     @Override
     public byte[] getBytes() {
+        // Too lazy to count the size
         ByteBuffer buffer = ByteBuffer.allocate(getSize());
         buffer.putInt(fileSize);
+        buffer.putInt(0x70);
+        buffer.putInt(Constants.ENDIAN_CONSTANT);
         buffer.putInt(linkSize);
         buffer.putInt(linkOff);
         buffer.putInt(mapOff);
@@ -49,6 +54,7 @@ public record HeaderSection(int fileSize, int linkSize, int linkOff, int mapOff,
         buffer.putInt(classDefsOff);
         buffer.putInt(dataSize);
         buffer.putInt(dataOff);
+        buffer.compact();
         return buffer.array();
     }
 
