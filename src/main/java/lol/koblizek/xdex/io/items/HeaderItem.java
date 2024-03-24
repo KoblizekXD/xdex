@@ -1,4 +1,4 @@
-package lol.koblizek.xdex.io.sections;
+package lol.koblizek.xdex.io.items;
 
 import lol.koblizek.xdex.util.ByteUtils;
 import lol.koblizek.xdex.util.Constants;
@@ -8,10 +8,10 @@ import java.nio.ByteOrder;
 import java.util.Arrays;
 
 // I want to die just form this record tbh
-public record HeaderSection(int fileSize, int linkSize, int linkOff, int mapOff, int stringIdsSize, int stringIdsOff,
-                            int typeIdsSize, int typeIdsOff, int protoIdsSize, int protoIdsOff, int fieldIdsSize,
-                            int fieldIdsOff, int methodIdsSize, int methodIdsOff, int classDefsSize, int classDefsOff,
-                            int dataSize, int dataOff) implements Section {
+public record HeaderItem(int fileSize, int linkSize, int linkOff, int mapOff, int stringIdsSize, int stringIdsOff,
+                         int typeIdsSize, int typeIdsOff, int protoIdsSize, int protoIdsOff, int fieldIdsSize,
+                         int fieldIdsOff, int methodIdsSize, int methodIdsOff, int classDefsSize, int classDefsOff,
+                         int dataSize, int dataOff) implements Item {
 
     /**
      * Returns the size of the section in bytes
@@ -27,8 +27,8 @@ public record HeaderSection(int fileSize, int linkSize, int linkOff, int mapOff,
     /**
      * This method returns the bytes of this section which can be constantly retrieved.
      *
-     * @apiNote It won't return Magic, Checksum or Signature bytes, for that, use {@link #getBytes(Section...)} instead.
-     * @return the bytes of this section
+     * @apiNote It won't return Magic, Checksum or Signature bytes, for that, use {@link #getBytes(Item...)} instead.
+     * @return the bytes of this item
      */
     @Override
     public byte[] getBytes() {
@@ -60,10 +60,10 @@ public record HeaderSection(int fileSize, int linkSize, int linkOff, int mapOff,
     }
 
     // This better be working...
-    public byte[] getBytes(Section... sections) {
+    public byte[] getBytes(Item... sections) {
         byte[] localBytes = getBytes();
-        byte[] hashed = ByteUtils.hashBytes(ByteUtils.concat(localBytes, Arrays.stream(sections).map(Section::getBytes).toArray(byte[][]::new)));
-        int checksum = ByteUtils.adler32(ByteUtils.concat(ByteUtils.concat(ByteUtils.concat(hashed, localBytes)), ByteUtils.concat(Arrays.stream(sections).map(Section::getBytes))));
+        byte[] hashed = ByteUtils.hashBytes(ByteUtils.concat(localBytes, Arrays.stream(sections).map(Item::getBytes).toArray(byte[][]::new)));
+        int checksum = ByteUtils.adler32(ByteUtils.concat(ByteUtils.concat(ByteUtils.concat(hashed, localBytes)), ByteUtils.concat(Arrays.stream(sections).map(Item::getBytes))));
         return ByteBuffer.allocate(0x70)
                 .put(Constants.DEX_FILE_MAGIC)
                 .putInt(checksum)
@@ -189,8 +189,8 @@ public record HeaderSection(int fileSize, int linkSize, int linkOff, int mapOff,
             return this;
         }
 
-        public HeaderSection build() {
-            return new HeaderSection(fileSize, linkSize, linkOff, mapOff, stringIdsSize, stringIdsOff, typeIdsSize, typeIdsOff, protoIdsSize, protoIdsOff, fieldIdsSize, fieldIdsOff, methodIdsSize, methodIdsOff, classDefsSize, classDefsOff, dataSize, dataOff);
+        public HeaderItem build() {
+            return new HeaderItem(fileSize, linkSize, linkOff, mapOff, stringIdsSize, stringIdsOff, typeIdsSize, typeIdsOff, protoIdsSize, protoIdsOff, fieldIdsSize, fieldIdsOff, methodIdsSize, methodIdsOff, classDefsSize, classDefsOff, dataSize, dataOff);
         }
     }
 

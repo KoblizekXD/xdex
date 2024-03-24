@@ -1,8 +1,8 @@
-package lol.koblizek.xdex.io.sections;
+package lol.koblizek.xdex.io.items;
 
 import java.nio.ByteBuffer;
 
-public record MethodIdSection(short classIdx, short protoIdx, int nameIdx) implements Section {
+public record MethodIdItem(short classIdx, short protoIdx, int nameIdx) implements Item {
     @Override
     public int getSize() {
         return 8;

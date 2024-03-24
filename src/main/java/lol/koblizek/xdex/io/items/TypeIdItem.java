@@ -1,8 +1,8 @@
-package lol.koblizek.xdex.io.sections;
+package lol.koblizek.xdex.io.items;
 
 import lol.koblizek.xdex.util.ByteUtils;
 
-public record TypeIdSection(int idxDescriptor) implements Section {
+public record TypeIdItem(int idxDescriptor) implements Item {
     @Override
     public int getSize() {
         return 4;
