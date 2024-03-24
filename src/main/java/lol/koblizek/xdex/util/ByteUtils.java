@@ -1,6 +1,8 @@
 package lol.koblizek.xdex.util;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -80,5 +82,17 @@ public class ByteUtils {
         Adler32 adler32 = new Adler32();
         adler32.update(data);
         return (int) adler32.getValue();
+    }
+
+    public static byte[] asBytes(int n) {
+        return ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(n).array();
+    }
+
+    public static byte[] asBytes(int... n) {
+        ByteBuffer b = ByteBuffer.allocate(n.length * 4).order(ByteOrder.LITTLE_ENDIAN);
+        for (int i : n) {
+            b.putInt(i);
+        }
+        return b.array();
     }
 }

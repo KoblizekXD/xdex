@@ -4,6 +4,7 @@ import lol.koblizek.xdex.util.ByteUtils;
 import lol.koblizek.xdex.util.Constants;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Arrays;
 
 // I want to die just form this record tbh
@@ -33,6 +34,7 @@ public record HeaderSection(int fileSize, int linkSize, int linkOff, int mapOff,
     public byte[] getBytes() {
         // Too lazy to count the size
         ByteBuffer buffer = ByteBuffer.allocate(getSize());
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.putInt(fileSize);
         buffer.putInt(0x70);
         buffer.putInt(Constants.ENDIAN_CONSTANT);
@@ -59,8 +61,9 @@ public record HeaderSection(int fileSize, int linkSize, int linkOff, int mapOff,
 
     // This better be working...
     public byte[] getBytes(Section... sections) {
-        byte[] hashed = ByteUtils.hashBytes(ByteUtils.concat(getBytes(), Arrays.stream(sections).map(Section::getBytes).toArray(byte[][]::new)));
-        int checksum = ByteUtils.adler32(ByteUtils.concat(ByteUtils.concat(ByteUtils.concat(hashed, getBytes())), ByteUtils.concat(Arrays.stream(sections).map(Section::getBytes))));
+        byte[] localBytes = getBytes();
+        byte[] hashed = ByteUtils.hashBytes(ByteUtils.concat(localBytes, Arrays.stream(sections).map(Section::getBytes).toArray(byte[][]::new)));
+        int checksum = ByteUtils.adler32(ByteUtils.concat(ByteUtils.concat(ByteUtils.concat(hashed, localBytes)), ByteUtils.concat(Arrays.stream(sections).map(Section::getBytes))));
         return ByteBuffer.allocate(0x70)
                 .put(Constants.DEX_FILE_MAGIC)
                 .putInt(checksum)
