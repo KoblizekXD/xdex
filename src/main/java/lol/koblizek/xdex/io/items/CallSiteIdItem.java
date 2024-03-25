@@ -2,7 +2,7 @@ package lol.koblizek.xdex.io.items;
 
 import lol.koblizek.xdex.util.ByteUtils;
 
-public record StringIdsItem(int stringDataOffset) implements Item {
+public record CallSiteIdItem(int callSiteOff) implements Item {
     @Override
     public int getSize() {
         return 4;
@@ -10,6 +10,6 @@ public record StringIdsItem(int stringDataOffset) implements Item {
 
     @Override
     public byte[] getBytes() {
-        return ByteUtils.asBytes(stringDataOffset);
+        return ByteUtils.asBytes(callSiteOff);
     }
 }
